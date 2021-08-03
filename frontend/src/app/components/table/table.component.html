@@ -1,0 +1,20 @@
+<h1>Table {{ tableName }}</h1>
+
+<div id="message" *ngFor="let message of messageList">
+  <div id="meta-data">
+    <div>
+      {{ message.sender }}
+    </div>
+    <div>
+      {{ message.dateTime | date: "shortTime" }}
+    </div>
+  </div>
+  <div id="text">
+    {{ message.text }}
+  </div>
+</div>
+
+<form [formGroup]="chatForm" (ngSubmit)="send()">
+  <label for="message-input">Message: </label>
+  <input id="message-input" formControlName="message" />
+</form>

@@ -1,0 +1,39 @@
+<app-error [message]="latestError"></app-error>
+
+<div id="join-table" class="box">
+  <h3>Join a table!</h3>
+  <form [formGroup]="tableJoinForm" (ngSubmit)="joinTable()">
+    <div class="my-input">
+      <label for="name-input">Table name: </label>
+      <input id="name-input" formControlName="name" formControlName="name" />
+    </div>
+    <button
+      type="submit"
+      id="create-table-button"
+      [disabled]="tableJoinForm.invalid"
+    >
+      Join
+    </button>
+  </form>
+</div>
+
+<div id="create-table" class="box">
+  <h3>Create your own table!</h3>
+  <form [formGroup]="tableCreationForm" (ngSubmit)="createNewTable()">
+    <div class="my-input">
+      <label for="name-input">Table name: </label>
+      <input id="name-input" formControlName="name" formControlName="name" />
+    </div>
+    <div class="my-input">
+      <label for="name-input">Password (Optional): </label>
+      <input id="name-input" formControlName="name" formControlName="name" />
+    </div>
+    <button
+      type="submit"
+      id="join-table-button"
+      [disabled]="tableCreationForm.invalid"
+    >
+      Create new table
+    </button>
+  </form>
+</div>

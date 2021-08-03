@@ -1,0 +1,6 @@
+<div id="errorArea">
+  <div id="error" *ngIf="hasError">
+    <div id="inner">Error: {{ errorMessage }}</div>
+    <button id="close" (click)="closeError()">&#10006;</button>
+  </div>
+</div>

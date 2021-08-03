@@ -1,0 +1,16 @@
+<div id="title-bar">
+  <ng-container id="connected" *ngIf="connected; else disconnectedCircle">
+    <div id="connected"></div>
+  </ng-container>
+  <ng-template #disconnectedCircle>
+    <div id="disconnected"></div>
+  </ng-template>
+  <h1>CHAT APP</h1>
+  <ng-container id="connected" *ngIf="connected; else leaveButton">
+    <button (click)="leave()">Leave</button>
+  </ng-container>
+  <ng-template #leaveButton>
+    <button (click)="enter()">Enter</button>
+  </ng-template>
+</div>
+<router-outlet></router-outlet>

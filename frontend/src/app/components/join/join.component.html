@@ -1,0 +1,17 @@
+<div id="join" class="block">
+  <h3>Enter the chat app!</h3>
+  <form [formGroup]="nameForm" (ngSubmit)="submit()">
+    <div class="my-input">
+      <label for="name-input">Username: </label>
+      <input id="name-input" formControlName="name" formControlName="name" />
+    </div>
+    <small
+      >Please pick a username. Case insensitve. 5-10 characters long.</small
+    >
+    <button type="submit" [disabled]="nameForm.invalid">Join Lobby</button>
+  </form>
+</div>
+
+<div id="table-list" *ngFor="let table of tableList">
+  <button>{{ table }}</button>
+</div>
