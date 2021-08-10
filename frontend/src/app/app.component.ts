@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Socket } from 'ngx-socket-io';
-import { ConnectionInfo } from './model/connection-info';
-import { SocketService } from './services/socket.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,27 +8,25 @@ import { SocketService } from './services/socket.service';
   styleUrls: ['./app.component.sass'],
 })
 export class AppComponent implements OnInit {
-  constructor(private socketService: SocketService, private router: Router) {}
+  username: string | null = null;
+
+  constructor(private router: Router, private authService: AuthService) {}
 
   connectionString: string = 'Not Connected';
   connected = false;
 
   ngOnInit(): void {
-    this.socketService.connectionObservable.subscribe(
-      (connectionInfo: ConnectionInfo) => {
-        if (connectionInfo.connected) {
-          this.connectionString = 'Connected';
+    this.authService.usernameObs.subscribe({
+      next: (username) => {
+        if (username !== null) {
+          this.username = username;
           this.connected = true;
         } else {
+          this.username = null;
           this.connected = false;
-          if (connectionInfo.error) {
-            this.connectionString = 'Error';
-          } else {
-            this.connectionString = 'Not Connected';
-          }
         }
-      }
-    );
+      },
+    });
   }
 
   enter(): void {
@@ -38,7 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   leave(): void {
-    this.socketService.disconnect();
+    this.authService.logout();
     this.router.navigate(['']);
   }
 }

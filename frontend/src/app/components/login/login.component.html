@@ -8,8 +8,9 @@
     <small
       >Please pick a username. Case insensitve. 5-10 characters long.</small
     >
-    <button type="submit" [disabled]="nameForm.invalid">Join Lobby</button>
+    <button type="submit" [disabled]="!isValid()">Join Lobby</button>
   </form>
+  {{ isValid() }} {{ a() }}
 </div>
 
 <div id="table-list" *ngFor="let table of tableList">

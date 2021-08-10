@@ -1,3 +1,4 @@
+<app-notification-area></app-notification-area>
 <div id="title-bar">
   <ng-container id="connected" *ngIf="connected; else disconnectedCircle">
     <div id="connected"></div>
@@ -5,7 +6,10 @@
   <ng-template #disconnectedCircle>
     <div id="disconnected"></div>
   </ng-template>
-  <h1>CHAT APP</h1>
+  <div id="title">
+    <h1>CHAT APP</h1>
+    {{ username }}
+  </div>
   <ng-container id="connected" *ngIf="connected; else leaveButton">
     <button (click)="leave()">Leave</button>
   </ng-container>

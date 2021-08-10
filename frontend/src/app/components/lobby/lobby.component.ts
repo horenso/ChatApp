@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { JoinResponse } from 'src/app/model/join-response';
 import { TableMeta } from 'src/app/model/table-meta';
@@ -11,9 +10,6 @@ import { SocketService } from 'src/app/services/socket.service';
   styleUrls: ['./lobby.component.sass'],
 })
 export class LobbyComponent implements OnInit {
-  tableCreationForm: FormGroup;
-  tableJoinForm: FormGroup;
-
   latestError = '';
 
   tableList: string[] = [];
@@ -22,33 +18,7 @@ export class LobbyComponent implements OnInit {
 
   connected: boolean = false;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private socketService: SocketService,
-    private router: Router
-  ) {
-    this.tableCreationForm = this.formBuilder.group({
-      name: [
-        null,
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(20),
-        ],
-      ],
-      password: [null, [Validators.minLength(5), Validators.maxLength(20)]],
-    });
-    this.tableJoinForm = this.formBuilder.group({
-      name: [
-        null,
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(20),
-        ],
-      ],
-    });
-  }
+  constructor(private socketService: SocketService, private router: Router) {}
 
   ngOnInit(): void {
     if (!this.socketService.isConnected()) {
@@ -64,17 +34,12 @@ export class LobbyComponent implements OnInit {
     });
   }
 
-  createNewTable(): void {
+  createNewTable(tableMeta: TableMeta): void {
     const socket = this.socketService.socket;
-    const values = this.tableCreationForm.value;
-    const tableCreation: TableMeta = {
-      name: values.name,
-      password: values.password,
-    };
-    socket.emit('create-new-table', tableCreation, (response: JoinResponse) => {
+    socket.emit('create-new-table', tableMeta, (response: JoinResponse) => {
       if (response.joined) {
         console.log('joined!');
-        this.router.navigate(['tables', values.name]);
+        this.router.navigate(['tables', tableMeta.name]);
       } else if (response.message) {
         this.latestError = response.message;
       } else {
@@ -83,12 +48,9 @@ export class LobbyComponent implements OnInit {
     });
   }
 
-  joinTable(): void {
-    // this.socketService.joinTable(this.tableJoinForm.value.name);
-
-    const tableName = this.tableJoinForm.value.name;
+  joinTable(tableMeta: TableMeta): void {
+    const tableName = tableMeta.name;
     console.log(`Trying to join ${tableName}.`);
-    const tableMeta: TableMeta = { name: tableName };
     this.socketService.socket.emit(
       'join-table',
       tableMeta,

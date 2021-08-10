@@ -1,22 +1,3 @@
-require('dotenv').config();
-const express = require('express');
-const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http, {
-  cors: {
-    origin: ['http://localhost:4200'],
-  },
-});
-const port = process.env.PORT || 4444;
-const jwt = require('jsonwebtoken');
-
-app.use(express.json());
-
-app.set(port, process.env.PORT);
-
-const userList = [];
-const tableList = [];
-
 io.use((socket, next) => {
   const newUser = socket.handshake.query.username.toLowerCase();
 
@@ -95,44 +76,3 @@ io.on('connection', (socket) => {
     console.log(io.sockets.adapter.rooms);
   });
 });
-
-app.post('/login', (req, res) => {
-  const newUserName = req.body.username;
-  console.log(req.body);
-  console.log(newUserName);
-  if (userList.findIndex((ele) => ele === newUserName) !== -1) {
-    res.status(403).send('Username already taken!');
-    return;
-  }
-  const username = newUserName.toLowerCase();
-  userList.push(username);
-  const accessToken = jwt.sign(username, process.env.ACCESS_TOKEN_SECRET);
-  res.json({ token: accessToken, username: username });
-});
-
-app.get('/hi', (req, res) => {});
-
-// app.listen(port, () => {
-//   console.log(`Express is listening on ${port}`);
-// });
-
-http.listen(port, () => {
-  console.log(`App is listening on ${port}`);
-});
-
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.splice(' ')[1];
-
-  if (token == null) {
-    return res.sendStatus(401);
-  }
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) {
-      return res.sendStatus(403);
-    }
-    req.user = user;
-    next();
-  });
-}

@@ -1,1 +1,13 @@
-<p>room-form works!</p>
+<form [formGroup]="tableForm" (ngSubmit)="submitForm()">
+  <div class="my-input">
+    <label for="name-input">Table name: </label>
+    <input id="name-input" formControlName="name" formControlName="name" />
+  </div>
+  <div class="my-input">
+    <label for="name-input">Password: </label>
+    <input id="name-input" formControlName="name" formControlName="name" />
+  </div>
+  <button type="submit" id="join-table-button" [disabled]="tableForm.invalid">
+    Create new table
+  </button>
+</form>

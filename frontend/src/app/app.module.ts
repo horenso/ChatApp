@@ -6,12 +6,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { JoinComponent } from './components/join/join.component';
-import { MainSocket } from './providers/main-socket';
+import { LoginComponent } from './components/login/login.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { TableComponent } from './components/table/table.component';
-import { ErrorComponent } from './components/error/error.component';
 import { RoomFormComponent } from './components/room-form/room-form.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { NotificationAreaComponent } from './components/notification-area/notification-area.component';
 
 const config: SocketIoConfig = {
   url: 'http://localhost:4444/',
@@ -23,20 +24,23 @@ const config: SocketIoConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    JoinComponent,
+    LoginComponent,
     LobbyComponent,
     TableComponent,
-    ErrorComponent,
     RoomFormComponent,
+    NotificationAreaComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     SocketIoModule.forRoot(config),
   ],
-  providers: [MainSocket],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

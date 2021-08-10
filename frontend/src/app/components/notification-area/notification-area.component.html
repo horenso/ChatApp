@@ -1,0 +1,9 @@
+<div id="area">
+  <div
+    id="notification"
+    *ngFor="let notification of notificationList; let i = index"
+  >
+    {{ notification.message }}
+    <button id="close-button" (click)="removeError(i)">x</button>
+  </div>
+</div>
