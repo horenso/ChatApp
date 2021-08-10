@@ -1,7 +1,10 @@
-# Events
+# ChatApp
 
-`new-table` Create a new table
-
-# Default tables
-
-`lobby` Information about all tables
+Start the backend:
+```
+npm run dev
+```
+Start the frontend:
+```
+ng serve
+```
