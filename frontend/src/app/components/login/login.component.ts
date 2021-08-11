@@ -23,7 +23,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router
   ) {
     this.nameForm = this.formBuilder.group({
       name: [
@@ -43,24 +44,16 @@ export class LoginComponent implements OnInit {
     return this.nameForm.valid && !this.authService.isAuthenticated();
   }
 
-  a(): boolean {
-    return this.authService.isAuthenticated();
-  }
-
   submit(): void {
     const user: User = { username: this.nameForm.value.name };
     this.authService.login(user).subscribe({
-      next: (response) => console.log(response),
+      next: () => {
+        this.router.navigate(['lobby']);
+      },
       error: (error) => {
         console.log('Error when logging in!');
         this.notificationService.error(error.error);
       },
     });
-    // this.socketService.connectionObservable.subscribe((info) => {
-    //   if (info.connected) {
-    //     this.router.navigate(['lobby']);
-    //   } else if (info.error) {
-    //   }
-    // });
   }
 }

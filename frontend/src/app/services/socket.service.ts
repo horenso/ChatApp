@@ -5,6 +5,7 @@ import { ConnectionInfo } from '../model/connection-info';
 import { JoinResponse } from '../model/join-response';
 import { LobbyInfo } from '../model/lobby-info';
 import { TableMeta } from '../model/table-meta';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,25 +23,29 @@ export class SocketService {
   loobyInfoObservable: Observable<LobbyInfo> =
     this.socket.fromEvent('lobby-info');
 
-  constructor(public socket: Socket, private ngZone: NgZone) {}
-
-  connect(username: string): void {
-    if (username == undefined || username.trim() === '') {
-      throw new Error('Username cannot be empty or null');
+  constructor(public socket: Socket, private authService: AuthService) {
+    if (authService.isAuthenticated()) {
+      this.connect();
     }
-    this.socket.ioSocket.io.opts.query = { username: username };
+  }
+
+  connect(): void {
+    this.socket.ioSocket.io.opts.query = { token: this.authService.getToken() };
     this.socket.ioSocket.io.uri = 'http://localhost:4444';
     this.socket.connect();
 
-    this.socket.on('connect', () =>
-      this.connectionSubject.next({ connected: true })
-    );
+    this.socket.on('connect', () => {
+      console.log('Connected!');
+      this.connectionSubject.next({ connected: true });
+    });
 
-    this.socket.on('disconnect', () =>
-      this.connectionSubject.next({ connected: false })
-    );
+    this.socket.on('disconnect', () => {
+      console.log('Disconnected!');
+      this.connectionSubject.next({ connected: false });
+    });
 
     this.socket.on('connect_error', (error: Error) => {
+      console.log('Connection error!');
       this.socket.disconnect();
       this.connectionSubject.next({ connected: false, error: error });
     });
@@ -62,9 +67,7 @@ export class SocketService {
     this.socket.emit(
       'create-new-table',
       tableCreation,
-      (response: JoinResponse) => {
-        // this.ngZone.run(router.)
-      }
+      (response: JoinResponse) => {}
     );
   }
 

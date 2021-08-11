@@ -2,9 +2,9 @@
   "name": "cool-game",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon server.js"
   },
   "author": "Jannis Adamek",
   "license": "ISC",
@@ -14,7 +14,8 @@
     "jsonwebtoken": "^8.5.1",
     "serve-favicon": "^2.5.0",
     "socket.io": "^4.1.3",
-    "socket.io-client": "^4.1.3"
+    "socket.io-client": "^4.1.3",
+    "socketio-jwt": "^4.6.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

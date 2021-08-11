@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { TableComponent } from './components/table/table.component';
-import { RoomFormComponent } from './components/room-form/room-form.component';
+import { TableFormComponent } from './components/table-form/table-form.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { NotificationAreaComponent } from './components/notification-area/notification-area.component';
@@ -27,7 +27,7 @@ const config: SocketIoConfig = {
     LoginComponent,
     LobbyComponent,
     TableComponent,
-    RoomFormComponent,
+    TableFormComponent,
     NotificationAreaComponent,
   ],
   imports: [

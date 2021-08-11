@@ -1,9 +1,9 @@
 <div id="join-table" class="box">
   <h3>Join a table!</h3>
-  <app-room-form (submit)="joinTable($event)"></app-room-form>
+  <app-table-form (onSubmit)="joinTable($event)"></app-table-form>
 </div>
 
 <div id="create-table" class="box">
   <h3>Create your own table!</h3>
-  <app-room-form (submit)="createNewTable($event)"></app-room-form>
+  <app-table-form (onSubmit)="createNewTable($event)"></app-table-form>
 </div>

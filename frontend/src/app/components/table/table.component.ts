@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Message } from 'src/app/model/message';
+import { AuthService } from 'src/app/services/auth.service';
 import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class TableComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private authService: AuthService
   ) {
     this.chatForm = this.formBuilder.group({
       message: [null, [Validators.required, Validators.minLength(1)]],
@@ -30,6 +32,9 @@ export class TableComponent implements OnInit {
     );
     this.socketService.socket.on('message-from-server', (message: Message) => {
       console.log(message);
+      if (message.sender === this.authService.getUsername()) {
+        message.sender = 'You';
+      }
       this.messageList.push(message);
     });
   }

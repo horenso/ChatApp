@@ -15,6 +15,6 @@
 </div>
 
 <form [formGroup]="chatForm" (ngSubmit)="send()">
-  <label for="message-input">Message: </label>
   <input id="message-input" formControlName="message" />
+  <button>Send</button>
 </form>

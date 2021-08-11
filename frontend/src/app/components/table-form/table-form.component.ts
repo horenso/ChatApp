@@ -3,14 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableMeta } from 'src/app/model/table-meta';
 
 @Component({
-  selector: 'app-room-form',
-  templateUrl: './room-form.component.html',
-  styleUrls: ['./room-form.component.sass'],
+  selector: 'app-table-form',
+  templateUrl: './table-form.component.html',
+  styleUrls: ['./table-form.component.sass'],
 })
-export class RoomFormComponent implements OnInit {
+export class TableFormComponent implements OnInit {
   tableForm: FormGroup;
 
-  @Output() submit = new EventEmitter<TableMeta>();
+  @Output() onSubmit = new EventEmitter<TableMeta>();
 
   constructor(private formBuilder: FormBuilder) {
     this.tableForm = this.formBuilder.group({
@@ -22,14 +22,14 @@ export class RoomFormComponent implements OnInit {
           Validators.maxLength(20),
         ],
       ],
-      password: [null, [Validators.minLength(5), Validators.maxLength(20)]],
+      password: [null, [Validators.maxLength(20)]],
     });
   }
 
   ngOnInit(): void {}
 
   submitForm(): void {
-    this.submit.emit({
+    this.onSubmit.emit({
       name: this.tableForm.value.name,
       password: this.tableForm.value.password,
     });
