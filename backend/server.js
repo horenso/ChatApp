@@ -22,6 +22,7 @@ io.use((socket, next) => {
     next(new Error('No token!'));
   }
   const token = socket.handshake.query.token;
+  socket.table = socket.handshake.query.table;
 
   jwt.verify(
     socket.handshake.query.token,
@@ -38,14 +39,18 @@ io.use((socket, next) => {
 
 io.on('connection', (socket) => {
   username = socket.username;
-  console.log(`User ${username} connected.`);
+
+  if (socket.table === '~') {
+    console.log(`User ${username} connected to the lobby.`);
+  } else {
+    console.log(`User ${username} connected to table '${socket.table}'.`);
+    socket.join(socket.table);
+  }
   console.log(userList);
 
   socket.on('disconnect', (socket) => {
     console.log(`User ${username} disconnected.`);
-
-    const index = userList.findIndex((ele) => ele === username);
-    userList.splice(index, 1);
+    socket.leave(socket.table);
     console.log(userList);
   });
 
@@ -75,12 +80,23 @@ io.on('connection', (socket) => {
     }
   });
 
+  setInterval(() => {
+    console.log(io.sockets.adapter.rooms);
+  }, 2000);
+
   socket.on('join-table', (table, callback) => {
     const index = tableList.findIndex((ele) => ele.name === table.name);
+    console.log('Size:');
+    console.log(Object.keys(io.sockets.adapter.rooms).length);
     if (index === -1) {
       callback({
         joined: false,
-        message: `Table ${table.name} does not exist.`,
+        message: `Table ${table.name} does not exist!`,
+      });
+    } else if (table.size === io.sockets.adapter.rooms.get(table.name).size) {
+      callback({
+        joined: false,
+        message: `Table ${table.name} full!`,
       });
     } else {
       const tablePassword = tableList[index].password;

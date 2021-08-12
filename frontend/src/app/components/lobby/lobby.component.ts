@@ -5,6 +5,8 @@ import { TableMeta } from 'src/app/model/table-meta';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SocketService } from 'src/app/services/socket.service';
 
+const LOBBY = '~';
+
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
@@ -22,7 +24,7 @@ export class LobbyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.socketService.connect();
+    this.socketService.connect(LOBBY);
     this.socketService.connectionObservable.subscribe({
       next: (info) => {
         this.connected = info.connected;

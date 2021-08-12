@@ -32,6 +32,7 @@ export class TableFormComponent implements OnInit {
     this.onSubmit.emit({
       name: this.tableForm.value.name,
       password: this.tableForm.value.password,
+      size: 8,
     });
   }
 }

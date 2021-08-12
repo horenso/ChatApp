@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ConnectionInfo } from '../model/connection-info';
+import { ConnectionRequest } from '../model/connection-request';
 import { JoinResponse } from '../model/join-response';
 import { LobbyInfo } from '../model/lobby-info';
 import { TableMeta } from '../model/table-meta';
@@ -23,14 +24,13 @@ export class SocketService {
   loobyInfoObservable: Observable<LobbyInfo> =
     this.socket.fromEvent('lobby-info');
 
-  constructor(public socket: Socket, private authService: AuthService) {
-    if (authService.isAuthenticated()) {
-      this.connect();
-    }
-  }
+  constructor(public socket: Socket, private authService: AuthService) {}
 
-  connect(): void {
-    this.socket.ioSocket.io.opts.query = { token: this.authService.getToken() };
+  connect(table: string): void {
+    this.socket.ioSocket.io.opts.query = {
+      token: this.authService.getToken(),
+      table: table,
+    };
     this.socket.ioSocket.io.uri = 'http://localhost:4444';
     this.socket.connect();
 
@@ -63,7 +63,11 @@ export class SocketService {
     if (!this.isConnected() || name == undefined || name.trim() === '') {
       return;
     }
-    const tableCreation: TableMeta = { name: name, password: password };
+    const tableCreation: TableMeta = {
+      name: name,
+      password: password,
+      size: 8,
+    };
     this.socket.emit(
       'create-new-table',
       tableCreation,

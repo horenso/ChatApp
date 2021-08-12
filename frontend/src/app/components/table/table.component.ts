@@ -27,9 +27,10 @@ export class TableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(
-      (params) => (this.tableName = params.name)
-    );
+    this.activatedRoute.params.subscribe((params) => {
+      this.tableName = params.name;
+      this.socketService.connect(this.tableName);
+    });
     this.socketService.socket.on('message-from-server', (message: Message) => {
       console.log(message);
       if (message.sender === this.authService.getUsername()) {
